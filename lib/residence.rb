@@ -27,7 +27,7 @@ module BrighterPlanet
             characteristics[:reported_annual_fuel_oil_consumption] * (timeframe / timeframe.year)
           end
           quorum 'from research', :needs => [:predicted_annual_fuel_oil_consumption, :predicted_fuel_shares, :missing_annual_energy, :occupation] do |characteristics, timeframe|
-            (characteristics[:predicted_annual_fuel_oil_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:fuel_oil]).joules.to(:litres_of_fuel_oil) ) * (timeframe / timeframe.year) * characteristics[:occupation] / fallback.occupation
+            (characteristics[:predicted_annual_fuel_oil_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:fuel_oil]).joules.to(:litres_of_fuel_oil) ) * (timeframe / timeframe.year) * characteristics[:occupation] / ::Pet.fallback.occupation
           end
         end
         
@@ -36,7 +36,7 @@ module BrighterPlanet
             characteristics[:reported_annual_natural_gas_consumption] * (timeframe / timeframe.year)
           end
           quorum 'from research', :needs => [:predicted_annual_natural_gas_consumption, :predicted_fuel_shares, :missing_annual_energy, :occupation] do |characteristics, timeframe|
-            (characteristics[:predicted_annual_natural_gas_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:natural_gas])) * (timeframe / timeframe.year) * characteristics[:occupation] / fallback.occupation
+            (characteristics[:predicted_annual_natural_gas_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:natural_gas])) * (timeframe / timeframe.year) * characteristics[:occupation] / ::Pet.fallback.occupation
           end
         end
         
@@ -45,7 +45,7 @@ module BrighterPlanet
             characteristics[:reported_annual_propane_consumption] * (timeframe / timeframe.year)
           end
           quorum 'from research', :needs => [:predicted_annual_propane_consumption, :predicted_fuel_shares, :missing_annual_energy, :occupation] do |characteristics, timeframe|
-            (characteristics[:predicted_annual_propane_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:propane]).joules.to(:litres_of_propane)) * (timeframe / timeframe.year) * characteristics[:occupation] / fallback.occupation
+            (characteristics[:predicted_annual_propane_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:propane]).joules.to(:litres_of_propane)) * (timeframe / timeframe.year) * characteristics[:occupation] / ::Pet.fallback.occupation
           end
         end
         
@@ -54,7 +54,7 @@ module BrighterPlanet
             characteristics[:reported_annual_biomass_consumption] * (timeframe / timeframe.year)
           end
           quorum 'from research', :needs => [:predicted_annual_biomass_consumption, :predicted_fuel_shares, :missing_annual_energy, :occupation] do |characteristics, timeframe|
-            (characteristics[:predicted_annual_biomass_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:biomass])) * (timeframe / timeframe.year) * characteristics[:occupation] / fallback.occupation
+            (characteristics[:predicted_annual_biomass_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:biomass])) * (timeframe / timeframe.year) * characteristics[:occupation] / ::Pet.fallback.occupation
           end
         end
         
@@ -63,7 +63,7 @@ module BrighterPlanet
             characteristics[:reported_annual_kerosene_consumption] * (timeframe / timeframe.year)
           end
           quorum 'from research', :needs => [:predicted_annual_kerosene_consumption, :predicted_fuel_shares, :missing_annual_energy, :occupation] do |characteristics, timeframe|
-            (characteristics[:predicted_annual_kerosene_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:kerosene]).joules.to(:litres_of_kerosene)) * (timeframe / timeframe.year) * characteristics[:occupation] / fallback.occupation
+            (characteristics[:predicted_annual_kerosene_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:kerosene]).joules.to(:litres_of_kerosene)) * (timeframe / timeframe.year) * characteristics[:occupation] / ::Pet.fallback.occupation
           end
         end
         
@@ -72,7 +72,7 @@ module BrighterPlanet
             characteristics[:reported_annual_coal_consumption] * (timeframe / timeframe.year)
           end
           quorum 'from research', :needs => [:predicted_annual_coal_consumption, :predicted_fuel_shares, :missing_annual_energy, :occupation] do |characteristics, timeframe|
-            (characteristics[:predicted_annual_coal_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:coal]).joules.to(:kilograms_of_coal)) * (timeframe / timeframe.year) * characteristics[:occupation] / fallback.occupation
+            (characteristics[:predicted_annual_coal_consumption] + (characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:coal]).joules.to(:kilograms_of_coal)) * (timeframe / timeframe.year) * characteristics[:occupation] / ::Pet.fallback.occupation
           end
         end
         
@@ -84,7 +84,7 @@ module BrighterPlanet
         
         committee :green_electricity do
           quorum 'default' do
-            fallback.green_electricity
+            ::Pet.fallback.green_electricity
           end
         end
         
@@ -100,7 +100,7 @@ module BrighterPlanet
           end
           
           quorum 'from research', :needs => [:predicted_annual_electricity_use, :predicted_fuel_shares, :missing_annual_energy, :occupation] do |characteristics, timeframe|
-            (characteristics[:predicted_annual_electricity_use] + ((characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:electricity]).joules.to(:kilowatt_hours))) * (timeframe / timeframe.year) * characteristics[:occupation] / fallback.occupation
+            (characteristics[:predicted_annual_electricity_use] + ((characteristics[:missing_annual_energy] * characteristics[:predicted_fuel_shares][:electricity]).joules.to(:kilowatt_hours))) * (timeframe / timeframe.year) * characteristics[:occupation] / ::Pet.fallback.occupation
           end
         end
         
@@ -166,7 +166,7 @@ module BrighterPlanet
         
         committee :occupation do
           quorum 'default' do
-            fallback.occupation
+            ::Pet.fallback.occupation
           end
         end
         
@@ -176,7 +176,7 @@ module BrighterPlanet
           end
           
           quorum 'default' do
-            fallback.residents_before_type_cast
+            ::Pet.fallback.residents_before_type_cast
           end
         end
     
@@ -238,7 +238,7 @@ module BrighterPlanet
           end
     
           quorum 'default' do
-            fallback.annual_fuel_oil_volume_estimate
+            ::Pet.fallback.annual_fuel_oil_volume_estimate
           end
         end
         
@@ -267,7 +267,7 @@ module BrighterPlanet
           end
     
           quorum 'default' do
-            fallback.monthly_natural_gas_volume_estimate * 12
+            ::Pet.fallback.monthly_natural_gas_volume_estimate * 12
           end
         end
         
@@ -296,7 +296,7 @@ module BrighterPlanet
           end
     
           quorum 'default' do
-            fallback.annual_propane_volume_estimate
+            ::Pet.fallback.annual_propane_volume_estimate
           end
         end
         
@@ -312,7 +312,7 @@ module BrighterPlanet
           end
     
           quorum 'default' do
-            fallback.annual_kerosene_volume_estimate
+            ::Pet.fallback.annual_kerosene_volume_estimate
           end
         end
         
@@ -328,7 +328,7 @@ module BrighterPlanet
           end
     
           quorum 'default' do
-            fallback.annual_wood_volume_estimate
+            ::Pet.fallback.annual_wood_volume_estimate
           end
         end
         
@@ -340,7 +340,7 @@ module BrighterPlanet
         
         committee :predicted_annual_coal_consumption do # returns kg
           quorum 'default' do
-            fallback.annual_coal_volume_estimate
+            ::Pet.fallback.annual_coal_volume_estimate
           end
         end
         
@@ -438,7 +438,7 @@ module BrighterPlanet
           end
           
           quorum 'default' do
-            fallback.monthly_electricity_use_estimate * 12
+            ::Pet.fallback.monthly_electricity_use_estimate * 12
           end
         end
         
@@ -466,14 +466,14 @@ module BrighterPlanet
         
         # This is kindof "hacky"
         # As implemented, this needs to be above floorspace committee or else cohort will always
-        # use the fallback
+        # use the ::Pet.fallback
         committee :floorspace_estimate do
           quorum 'from cohort', :needs => :cohort do |characteristics|
             characteristics[:cohort].weighted_average :floorspace
           end
           
           quorum 'default' do
-            fallback.floorspace_estimate
+            ::Pet.fallback.floorspace_estimate
           end
         end
         
