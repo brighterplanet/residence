@@ -22,17 +22,6 @@ class ResidenceRecord < ActiveRecord::Base
                 :occupation => 0.937, # https://brighterplanet.sifterapp.com/projects/30/issues/434
                 :green_electricity => 0.0 # crap placeholder for now
 
-  class << self
-    def research(key)
-      case key
-      when :efficient_lightbulb_power
-        17.5 # watts https://brighterplanet.sifterapp.com/projects/30/issues/433
-      when :standard_lightbulb_power
-        67.5 # watts https://brighterplanet.sifterapp.com/projects/30/issues/433
-      end
-    end
-  end
-  
   def zip_code_name=(value)
     self.zip_code = ZipCode.find_by_name(value)
   end

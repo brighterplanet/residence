@@ -544,6 +544,15 @@ module BrighterPlanet
           end
         end
       end
+
+      def self.research(key)
+        case key
+        when :efficient_lightbulb_power
+          17.5 # watts https://brighterplanet.sifterapp.com/projects/30/issues/433
+        when :standard_lightbulb_power
+          67.5 # watts https://brighterplanet.sifterapp.com/projects/30/issues/433
+        end
+      end
     end
   end
 end
