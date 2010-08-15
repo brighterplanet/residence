@@ -1,3 +1,4 @@
+# sabshere 8/15/10 should this just be required in the emitter gem's lib/emitter.rb?
 require 'summary_judgement'
 
 module BrighterPlanet

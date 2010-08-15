@@ -1,3 +1,4 @@
+# sabshere 8/15/10 should these just be required in the emitter gem's lib/emitter.rb?
 require 'leap'
 require 'weighted_average'
 
