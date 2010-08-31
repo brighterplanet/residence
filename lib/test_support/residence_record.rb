@@ -1,4 +1,5 @@
 require 'residence'
+require 'falls_back_on'
 
 class ResidenceRecord < ActiveRecord::Base
   include Sniff::Emitter
