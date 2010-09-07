@@ -386,7 +386,7 @@ module BrighterPlanet
                 if clothes_machine_use_cohort.any?
                   energy += clothes_machine_use_cohort.weighted_average(:annual_energy_from_electricity_for_clothes_driers).to_f
                 else
-                  energy += charcteristics[:clothes_machine_use].annual_energy_from_electricity_for_clothes_driers
+                  energy += characteristics[:clothes_machine_use].annual_energy_from_electricity_for_clothes_driers
                 end
               end
               
