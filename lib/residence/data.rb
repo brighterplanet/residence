@@ -54,9 +54,7 @@ module BrighterPlanet
             ResidenceFuelPrice.run_data_miner!
           end
           
-          process "pull dependencies" do
-            run_data_miner_on_belongs_to_associations
-          end
+          process :run_data_miner_on_belongs_to_associations
         end
       end
     end
