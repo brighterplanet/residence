@@ -5,4 +5,4 @@ require 'cucumber'
 require 'cucumber/formatter/unicode'
 
 require 'sniff'
-Sniff.init File.join(File.dirname(__FILE__), '..', '..'), :earth => [:residence, :locality], :cucumber => true
+Sniff.init File.expand_path('../..', File.dirname(__FILE__)), :earth => [:residence, :locality], :cucumber => true
