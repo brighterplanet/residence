@@ -1,11 +1,8 @@
 # sabshere 8/15/10 should this just be required in the emitter gem's lib/emitter.rb?
-require 'summary_judgement'
-
 module BrighterPlanet
   module Residence
     module Summarization
       def self.included(base)
-        base.extend SummaryJudgement
         base.summarize do |has|
           has.adjective lambda { |residence| "#{residence.rooms}-room" }, :if => :rooms
           has.identity [:residence_class, :name], :if => :residence_class

@@ -1,11 +1,8 @@
 # sabshere 8/15/10 should this just be required in the emitter gem's lib/emitter.rb?
-require 'characterizable'
-
 module BrighterPlanet
   module Residence
     module Characterization
       def self.included(base)
-        base.send :include, Characterizable
         base.characterize do
           has :zip_code
           has :urbanity
@@ -43,7 +40,6 @@ module BrighterPlanet
           has :annual_coal_volume_estimate, :trumps => :annual_coal_cost, :measures => :mass # it says volume, but it wants mass
           # has :annual_coal_cost, :trumps => :annual_coal_volume_estimate, :measures => :cost
         end
-        base.add_implicit_characteristics
       end
     end
   end

@@ -1,7 +1,5 @@
 # sabshere 8/15/10 should this just be required in the emitter gem's lib/emitter.rb?
 # (i can see why not... you might not always want data_miner)
-require 'data_miner'
-
 module BrighterPlanet
   module Residence
     module Data

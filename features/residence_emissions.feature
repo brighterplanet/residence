@@ -8,7 +8,7 @@ Feature: Residence Emissions Calculations
     And it has "urbanity.name" of "<urbanity>"
     And it has "dishwasher_use.name" of "<dishwasher_use>"
     When emissions are calculated
-    Then the emission value should be within 0.1 kgs of <emission>
+    Then the emission value should be within "0.1" kgs of "<emission>"
     Examples:
-      | zip_code | floorspace | residence_class                                                                 | urbanity | dishwasher_use      | emission |
-      |    48915 |       1400 | Single-family detached house (a one-family house detached from any other house) |     City | 4 to 6 times a week |   6068.6 |
+      | zip_code | floorspace | residence_class                                                                 | urbanity | dishwasher_use      | emission  |
+      |    48915 |       1400 | Single-family detached house (a one-family house detached from any other house) |     City | 4 to 6 times a week | 6091.88178 |

@@ -1,12 +1,9 @@
 # sabshere 8/15/10 should these just be required in the emitter gem's lib/emitter.rb?
-require 'leap'
-require 'weighted_average'
 
 module BrighterPlanet
   module Residence
     module CarbonModel
       def self.included(base)
-        base.extend ::Leap::Subject
         base.decide :emission, :with => :characteristics do
           committee :emission do
             quorum 'from fuel and electricity use and occupation and residents', :needs => [:fuel_oil_consumed, :natural_gas_consumed, :dirty_electricity_generated, :propane_consumed, :biomass_consumed, :kerosene_consumed, :coal_consumed, :residents, :electricity_emission_factor, :floorspace_estimate, :air_conditioner_use, :active_subtimeframe, :occupation] do |characteristics, timeframe|
