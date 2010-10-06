@@ -50,6 +50,7 @@ module BrighterPlanet
           process "pull orphans" do
             ResidenceFuelType.run_data_miner!
             ResidenceFuelPrice.run_data_miner!
+            ResidentialEnergyConsumptionSurveyResponse.run_data_miner!
           end
           
           process :run_data_miner_on_belongs_to_associations
