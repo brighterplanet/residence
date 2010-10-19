@@ -57,13 +57,13 @@ class ResidenceRecord < ActiveRecord::Base
   )
   
   ROOMS = [
-    [:bedroom,             { :max_count, 10, :multiplier, 1    }],
-    [:living_room,         { :max_count, 5,  :multiplier, 1    }],
-    [:dining_room,         { :max_count, 3,  :multiplier, 1    }],
-    [:kitchen,             { :max_count, 3,  :multiplier, 1    }],
-    [:full_bathroom,       { :max_count, 10, :multiplier, 0.5  }],
-    [:half_bathroom,       { :max_count, 10, :multiplier, 0.25 }],
-    [:heated_garage_berth, { :max_count, 5,  :multiplier, 1    }],
-    [:other_room,          { :max_count, 10, :multiplier, 1    }]
+    [:bedroom,             { :max_count => 10, :multiplier => 1    }],
+    [:living_room,         { :max_count => 5,  :multiplier => 1    }],
+    [:dining_room,         { :max_count => 3,  :multiplier => 1    }],
+    [:kitchen,             { :max_count => 3,  :multiplier => 1    }],
+    [:full_bathroom,       { :max_count => 10, :multiplier => 0.5  }],
+    [:half_bathroom,       { :max_count => 10, :multiplier => 0.25 }],
+    [:heated_garage_berth, { :max_count => 5,  :multiplier => 1    }],
+    [:other_room,          { :max_count => 10, :multiplier => 1    }]
   ]
 end
