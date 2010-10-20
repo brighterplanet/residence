@@ -10,5 +10,5 @@ Feature: Residence Emissions Calculations
     When emissions are calculated
     Then the emission value should be within "0.1" kgs of "<emission>"
     Examples:
-      | zip_code | floorspace | residence_class                                                                 | urbanity | dishwasher_use      | emission   |
-      |    48915 |       1400 | Single-family detached house (a one-family house detached from any other house) |     City | 4 to 6 times a week | 3981.67675 |
+      | zip_code | floorspace | residence_class                                                                 | urbanity | dishwasher_use      | emission  |
+      |    48915 |       1400 | Single-family detached house (a one-family house detached from any other house) |     City | 4 to 6 times a week | 6091.88178 |
