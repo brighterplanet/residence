@@ -4,6 +4,7 @@ require 'falls_back_on'
 class ResidenceRecord < ActiveRecord::Base
   include Sniff::Emitter
   include BrighterPlanet::Residence
+  set_table_name 'residential_energy_consumption_survey_responses'
   
   def zip_code_name=(value)
     self.zip_code = ZipCode.find_by_name(value)
