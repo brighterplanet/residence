@@ -3,8 +3,8 @@ Feature: Residence Committee Calculations
 
   Scenario Outline: Bathrooms committee
     Given a residence emitter
-    And a characteristic "full_bathrooms" of "<full_baths>"
-    And a characteristic "half_bathrooms" of "<half_baths>"
+    And a characteristic "full_bathrooms" of integer value "<full_baths>"
+    And a characteristic "half_bathrooms" of integer value "<half_baths>"
     When the "bathrooms" committee is calculated
     Then the bathrooms committee should be exactly "<total>"
     Examples:
