@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>carbon_model.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1667526-20']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</head>
+
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>carbon_model.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p>Copyright © 2010 Brighter Planet.
+See LICENSE for details.
+Contact Brighter Planet for dual-license arrangements.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>sabshere 8/15/10 should these just be required in the emitter gem&rsquo;s lib/emitter.rb?</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">BrighterPlanet</span>
+  <span class="k">module</span> <span class="nn">Residence</span>
+    <span class="k">module</span> <span class="nn">CarbonModel</span>
+      <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">included</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+        <span class="n">base</span><span class="o">.</span><span class="n">decide</span> <span class="ss">:emission</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="ss">:characteristics</span> <span class="k">do</span>
+          <span class="n">committee</span> <span class="ss">:emission</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from fuel and electricity use and occupation and residents&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:fuel_oil_consumed</span><span class="p">,</span> <span class="ss">:natural_gas_consumed</span><span class="p">,</span> <span class="ss">:dirty_electricity_generated</span><span class="p">,</span> <span class="ss">:propane_consumed</span><span class="p">,</span> <span class="ss">:biomass_consumed</span><span class="p">,</span> <span class="ss">:kerosene_consumed</span><span class="p">,</span> <span class="ss">:coal_consumed</span><span class="p">,</span> <span class="ss">:residents</span><span class="p">,</span> <span class="ss">:electricity_emission_factor</span><span class="p">,</span> <span class="ss">:floorspace_estimate</span><span class="p">,</span> <span class="ss">:air_conditioner_use</span><span class="p">,</span> <span class="ss">:active_subtimeframe</span><span class="p">,</span> <span class="ss">:occupation</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="p">(</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:fuel_oil_consumed</span><span class="o">]</span>           <span class="o">*</span> <span class="no">ResidenceFuelType</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s1">&#39;fuel oil&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">emission_factor</span>    <span class="o">+</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:natural_gas_consumed</span><span class="o">]</span>        <span class="o">*</span> <span class="no">ResidenceFuelType</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s1">&#39;natural gas&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">emission_factor</span> <span class="o">+</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:propane_consumed</span><span class="o">]</span>            <span class="o">*</span> <span class="no">ResidenceFuelType</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s1">&#39;propane&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">emission_factor</span>     <span class="o">+</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:biomass_consumed</span><span class="o">]</span>            <span class="o">*</span> <span class="no">ResidenceFuelType</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s1">&#39;biomass&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">emission_factor</span>     <span class="o">+</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:kerosene_consumed</span><span class="o">]</span>           <span class="o">*</span> <span class="no">ResidenceFuelType</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s1">&#39;kerosene&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">emission_factor</span>    <span class="o">+</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:coal_consumed</span><span class="o">]</span>               <span class="o">*</span> <span class="no">ResidenceFuelType</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s1">&#39;coal&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">emission_factor</span>        <span class="o">+</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:dirty_electricity_generated</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:electricity_emission_factor</span><span class="o">]</span>                 <span class="o">+</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:floorspace_estimate</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:air_conditioner_use</span><span class="o">].</span><span class="n">fugitive_emission</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:occupation</span><span class="o">]</span>
+              <span class="p">)</span> <span class="o">*</span>
+              <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:active_subtimeframe</span><span class="o">]</span> <span class="o">/</span> <span class="n">timeframe</span><span class="p">)</span> <span class="o">/</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:residents</span><span class="o">]</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="k">raise</span> <span class="s2">&quot;Residence&#39;s default emission quorum should never be called&quot;</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+      
+          <span class="n">committee</span> <span class="ss">:fuel_oil_consumed</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from reports&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:reported_annual_fuel_oil_consumption</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_fuel_oil_consumption</span><span class="o">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+            <span class="k">end</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_fuel_oil_consumption</span><span class="p">,</span> <span class="ss">:predicted_fuel_shares</span><span class="p">,</span> <span class="ss">:missing_annual_energy</span><span class="p">,</span> <span class="ss">:occupation</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_fuel_oil_consumption</span><span class="o">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:missing_annual_energy</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_fuel_shares</span><span class="o">][</span><span class="ss">:fuel_oil</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:litres_of_fuel_oil</span><span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:occupation</span><span class="o">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">occupation</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:natural_gas_consumed</span> <span class="k">do</span> <span class="c1"># returns joules</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from reports&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:reported_annual_natural_gas_consumption</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_natural_gas_consumption</span><span class="o">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+            <span class="k">end</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_natural_gas_consumption</span><span class="p">,</span> <span class="ss">:predicted_fuel_shares</span><span class="p">,</span> <span class="ss">:missing_annual_energy</span><span class="p">,</span> <span class="ss">:occupation</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_natural_gas_consumption</span><span class="o">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:missing_annual_energy</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_fuel_shares</span><span class="o">][</span><span class="ss">:natural_gas</span><span class="o">]</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:occupation</span><span class="o">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">occupation</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:propane_consumed</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from reports&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:reported_annual_propane_consumption</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_propane_consumption</span><span class="o">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+            <span class="k">end</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_propane_consumption</span><span class="p">,</span> <span class="ss">:predicted_fuel_shares</span><span class="p">,</span> <span class="ss">:missing_annual_energy</span><span class="p">,</span> <span class="ss">:occupation</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_propane_consumption</span><span class="o">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:missing_annual_energy</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_fuel_shares</span><span class="o">][</span><span class="ss">:propane</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:litres_of_propane</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:occupation</span><span class="o">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">occupation</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:biomass_consumed</span> <span class="k">do</span> <span class="c1"># returns joules</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from reports&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:reported_annual_biomass_consumption</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_biomass_consumption</span><span class="o">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+            <span class="k">end</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_biomass_consumption</span><span class="p">,</span> <span class="ss">:predicted_fuel_shares</span><span class="p">,</span> <span class="ss">:missing_annual_energy</span><span class="p">,</span> <span class="ss">:occupation</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_biomass_consumption</span><span class="o">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:missing_annual_energy</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_fuel_shares</span><span class="o">][</span><span class="ss">:biomass</span><span class="o">]</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:occupation</span><span class="o">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">occupation</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:kerosene_consumed</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from reports&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:reported_annual_kerosene_consumption</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_kerosene_consumption</span><span class="o">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+            <span class="k">end</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_kerosene_consumption</span><span class="p">,</span> <span class="ss">:predicted_fuel_shares</span><span class="p">,</span> <span class="ss">:missing_annual_energy</span><span class="p">,</span> <span class="ss">:occupation</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_kerosene_consumption</span><span class="o">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:missing_annual_energy</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_fuel_shares</span><span class="o">][</span><span class="ss">:kerosene</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:litres_of_kerosene</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:occupation</span><span class="o">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">occupation</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:coal_consumed</span> <span class="k">do</span> <span class="c1"># returns kg</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from reports&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:reported_annual_coal_consumption</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_coal_consumption</span><span class="o">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+            <span class="k">end</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_coal_consumption</span><span class="p">,</span> <span class="ss">:predicted_fuel_shares</span><span class="p">,</span> <span class="ss">:missing_annual_energy</span><span class="p">,</span> <span class="ss">:occupation</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_coal_consumption</span><span class="o">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:missing_annual_energy</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_fuel_shares</span><span class="o">][</span><span class="ss">:coal</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:kilograms_of_coal</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:occupation</span><span class="o">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">occupation</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:dirty_electricity_generated</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from electricity generated and green electricity&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:electricity_generated</span><span class="p">,</span> <span class="ss">:green_electricity</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:electricity_generated</span><span class="o">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">-</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:green_electricity</span><span class="o">]</span><span class="p">)</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:green_electricity</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">green_electricity</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:electricity_generated</span> <span class="k">do</span> <span class="c1"># returns kWh</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from electricity used and loss rate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:electricity_used</span><span class="p">,</span> <span class="ss">:electricity_loss_rate</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:electricity_used</span><span class="o">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">-</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:electricity_loss_rate</span><span class="o">]</span><span class="p">)</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:electricity_used</span> <span class="k">do</span> <span class="c1"># returns kWh</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from reports&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:reported_annual_electricity_use</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_electricity_use</span><span class="o">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_electricity_use</span><span class="p">,</span> <span class="ss">:predicted_fuel_shares</span><span class="p">,</span> <span class="ss">:missing_annual_energy</span><span class="p">,</span> <span class="ss">:occupation</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="p">(</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_electricity_use</span><span class="o">]</span> <span class="o">+</span> <span class="p">((</span><span class="n">characteristics</span><span class="o">[</span><span class="ss">:missing_annual_energy</span><span class="o">]</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_fuel_shares</span><span class="o">][</span><span class="ss">:electricity</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:kilowatt_hours</span><span class="p">)))</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:occupation</span><span class="o">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">occupation</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:missing_annual_energy</span> <span class="k">do</span> <span class="c1"># returns joules</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from fuel reports&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_fuel_oil_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_natural_gas_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_propane_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_kerosene_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_biomass_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_coal_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_electricity_use</span><span class="o">]</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:reported_annual_fuel_oil_consumption</span><span class="p">,</span> <span class="ss">:reported_annual_natural_gas_consumption</span><span class="p">,</span> <span class="ss">:reported_annual_propane_consumption</span><span class="p">,</span> <span class="ss">:reported_annual_kerosene_consumption</span><span class="p">,</span> <span class="ss">:reported_annual_biomass_consumption</span><span class="p">,</span> <span class="ss">:reported_annual_coal_consumption</span><span class="p">,</span> <span class="ss">:reported_annual_electricity_use</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">energy</span> <span class="o">=</span> <span class="mi">0</span>
+              <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_fuel_oil_consumption</span><span class="o">]</span> <span class="ow">and</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_fuel_oil_consumption</span><span class="o">].</span><span class="n">zero?</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_fuel_oil_consumption</span><span class="o">].</span><span class="n">litres_of_fuel_oil</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="k">end</span>
+              <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_natural_gas_consumption</span><span class="o">]</span> <span class="ow">and</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_natural_gas_consumption</span><span class="o">].</span><span class="n">zero?</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_natural_gas_consumption</span><span class="o">]</span>
+              <span class="k">end</span>
+              <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_propane_consumption</span><span class="o">]</span> <span class="ow">and</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_propane_consumption</span><span class="o">].</span><span class="n">zero?</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_propane_consumption</span><span class="o">].</span><span class="n">litres_of_propane</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="k">end</span>
+              <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_kerosene_consumption</span><span class="o">]</span> <span class="ow">and</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_kerosene_consumption</span><span class="o">].</span><span class="n">zero?</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_kerosene_consumption</span><span class="o">].</span><span class="n">litres_of_kerosene</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="k">end</span>
+              <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_biomass_consumption</span><span class="o">]</span> <span class="ow">and</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_biomass_consumption</span><span class="o">].</span><span class="n">zero?</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_biomass_consumption</span><span class="o">]</span>
+              <span class="k">end</span>
+              <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_coal_consumption</span><span class="o">]</span> <span class="ow">and</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_coal_consumption</span><span class="o">].</span><span class="n">zero?</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_coal_consumption</span><span class="o">].</span><span class="n">kilograms_of_coal</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="k">end</span>
+              <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_electricity_use</span><span class="o">]</span> <span class="ow">and</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:reported_annual_electricity_use</span><span class="o">].</span><span class="n">zero?</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_electricity_use</span><span class="o">].</span><span class="n">kilowatt_hours</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="k">end</span>
+              <span class="n">energy</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:electricity_loss_rate</span> <span class="k">do</span> <span class="c1"># returns percentage</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from egrid region&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:egrid_region</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:egrid_region</span><span class="o">].</span><span class="n">loss_factor</span>
+            <span class="k">end</span>
+      
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="no">EgridRegion</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">loss_factor</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:electricity_emission_factor</span> <span class="k">do</span> <span class="c1"># returns kg CO2 / kWh</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from egrid subregion&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:egrid_subregion</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:egrid_subregion</span><span class="o">].</span><span class="n">electricity_emission_factor</span>
+            <span class="k">end</span>
+      
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="no">EgridSubregion</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">electricity_emission_factor</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:egrid_region</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from egrid subregion&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:egrid_subregion</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:egrid_subregion</span><span class="o">].</span><span class="n">egrid_region</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:egrid_subregion</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from_zip_code&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:zip_code</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:zip_code</span><span class="o">].</span><span class="n">egrid_subregion</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:occupation</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">occupation</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:residents</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from cohort&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:cohort</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:cohort</span><span class="o">].</span><span class="n">weighted_average</span> <span class="ss">:residents</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">residents_before_type_cast</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+      
+          <span class="n">committee</span> <span class="ss">:air_conditioner_use</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="no">AirConditionerUse</span><span class="o">.</span><span class="n">fallback</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:predicted_fuel_shares</span> <span class="k">do</span> <span class="c1"># returns an array of percentages</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_energy_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_fuel_oil_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_natural_gas_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_propane_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_kerosene_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_biomass_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_coal_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_electricity_use</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="p">{</span>
+                <span class="ss">:fuel_oil</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_fuel_oil_consumption</span><span class="o">].</span><span class="n">litres_of_fuel_oil</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:joules</span><span class="p">)</span> <span class="o">/</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_energy_consumption</span><span class="o">]</span><span class="p">,</span>
+                <span class="ss">:natural_gas</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_natural_gas_consumption</span><span class="o">]</span> <span class="o">/</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_energy_consumption</span><span class="o">]</span><span class="p">,</span>
+                <span class="ss">:propane</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_propane_consumption</span><span class="o">].</span><span class="n">litres_of_propane</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:joules</span><span class="p">)</span> <span class="o">/</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_energy_consumption</span><span class="o">]</span><span class="p">,</span>
+                <span class="ss">:kerosene</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_kerosene_consumption</span><span class="o">].</span><span class="n">litres_of_kerosene</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:joules</span><span class="p">)</span> <span class="o">/</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_energy_consumption</span><span class="o">]</span><span class="p">,</span>
+                <span class="ss">:biomass</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_biomass_consumption</span><span class="o">]</span> <span class="o">/</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_energy_consumption</span><span class="o">]</span><span class="p">,</span>
+                <span class="ss">:coal</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_coal_consumption</span><span class="o">].</span><span class="n">kilograms_of_coal</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:joules</span><span class="p">)</span> <span class="o">/</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_energy_consumption</span><span class="o">]</span><span class="p">,</span>
+                <span class="ss">:electricity</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_electricity_use</span><span class="o">].</span><span class="n">kilowatt_hours</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:joules</span><span class="p">)</span> <span class="o">/</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_energy_consumption</span><span class="o">]</span>
+              <span class="p">}</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+      
+          <span class="n">committee</span> <span class="ss">:predicted_annual_energy_consumption</span> <span class="k">do</span> <span class="c1"># returns BTUs</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from research&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:predicted_annual_fuel_oil_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_natural_gas_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_propane_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_kerosene_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_biomass_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_coal_consumption</span><span class="p">,</span> <span class="ss">:predicted_annual_electricity_use</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">energy</span> <span class="o">=</span> <span class="mi">0</span>
+              <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_fuel_oil_consumption</span><span class="o">].</span><span class="n">litres_of_fuel_oil</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_natural_gas_consumption</span><span class="o">]</span>
+              <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_propane_consumption</span><span class="o">].</span><span class="n">litres_of_propane</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_kerosene_consumption</span><span class="o">].</span><span class="n">litres_of_kerosene</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_biomass_consumption</span><span class="o">]</span>
+              <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_coal_consumption</span><span class="o">].</span><span class="n">kilograms_of_coal</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:predicted_annual_electricity_use</span><span class="o">].</span><span class="n">kilowatt_hours</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+      
+          <span class="n">committee</span> <span class="ss">:reported_annual_fuel_oil_consumption</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from volume estimate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:annual_fuel_oil_volume_estimate</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:annual_fuel_oil_volume_estimate</span><span class="o">]</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;from cost&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:annual_fuel_oil_cost</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="ss">:state</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">relaxations</span> <span class="o">=</span> <span class="o">[]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="p">,</span>           <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span> <span class="p">}</span> <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">last_year</span><span class="p">,</span> <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span> <span class="p">}</span> <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="p">,</span>           <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="no">Country</span><span class="o">.</span><span class="n">united_states</span>   <span class="p">}</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">last_year</span><span class="p">,</span> <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="no">Country</span><span class="o">.</span><span class="n">united_states</span>   <span class="p">}</span>
+              <span class="k">if</span> <span class="n">price_per_unit</span> <span class="o">=</span> <span class="no">ResidenceFuelType</span><span class="o">[</span><span class="ss">:fuel_oil</span><span class="o">].</span><span class="n">price_per_unit</span><span class="p">(</span><span class="n">relaxations</span><span class="p">)</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:annual_fuel_oil_cost</span><span class="o">]</span> <span class="o">/</span> <span class="n">price_per_unit</span>
+              <span class="k">else</span>
+                <span class="kp">nil</span>
+              <span class="k">end</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:predicted_annual_fuel_oil_consumption</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from cohort&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:cohort</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:cohort</span><span class="o">].</span><span class="n">weighted_average</span><span class="p">(</span><span class="sx">%w(heating_space heating_water appliances)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">purpose</span><span class="o">|</span> <span class="s2">&quot;annual_energy_from_fuel_oil_for_</span><span class="si">#{</span><span class="n">purpose</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">to_sym</span> <span class="p">})</span><span class="o">.</span><span class="n">to_f</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:litres_of_fuel_oil</span><span class="p">)</span>
+            <span class="k">end</span>
+      
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">annual_fuel_oil_volume_estimate</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:reported_annual_natural_gas_consumption</span> <span class="k">do</span> <span class="c1"># returns joules</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from volume estimate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:monthly_natural_gas_volume_estimate</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:monthly_natural_gas_volume_estimate</span><span class="o">]</span> <span class="o">*</span> <span class="mi">12</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;from cost&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:monthly_natural_gas_cost</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="ss">:state</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">relaxations</span> <span class="o">=</span> <span class="o">[]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="p">,</span>           <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span> <span class="p">}</span> <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">last_year</span><span class="p">,</span> <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span> <span class="p">}</span> <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="p">,</span>           <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="no">Country</span><span class="o">.</span><span class="n">united_states</span>   <span class="p">}</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">last_year</span><span class="p">,</span> <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="no">Country</span><span class="o">.</span><span class="n">united_states</span>   <span class="p">}</span>
+              <span class="k">if</span> <span class="n">price_per_unit</span> <span class="o">=</span> <span class="no">ResidenceFuelType</span><span class="o">[</span><span class="ss">:natural_gas</span><span class="o">].</span><span class="n">price_per_unit</span><span class="p">(</span><span class="n">relaxations</span><span class="p">)</span> <span class="c1">#FIXME joules vs. cubic metres issue</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:monthly_natural_gas_cost</span><span class="o">]</span> <span class="o">*</span> <span class="mi">12</span> <span class="o">/</span> <span class="n">price_per_unit</span>
+              <span class="k">else</span>
+                <span class="kp">nil</span>
+              <span class="k">end</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:predicted_annual_natural_gas_consumption</span> <span class="k">do</span> <span class="c1"># returns joules</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from cohort&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:cohort</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:cohort</span><span class="o">].</span><span class="n">weighted_average</span><span class="p">(</span><span class="sx">%w(heating_space heating_water appliances)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">purpose</span><span class="o">|</span> <span class="s2">&quot;annual_energy_from_natural_gas_for_</span><span class="si">#{</span><span class="n">purpose</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">to_sym</span> <span class="p">})</span><span class="o">.</span><span class="n">to_f</span>
+            <span class="k">end</span>
+      
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">monthly_natural_gas_volume_estimate</span> <span class="o">*</span> <span class="mi">12</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:reported_annual_propane_consumption</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from volume estimate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:annual_propane_volume_estimate</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:annual_propane_volume_estimate</span><span class="o">]</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;from cost&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:annual_propane_cost</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="ss">:state</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">relaxations</span> <span class="o">=</span> <span class="o">[]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="p">,</span>           <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">].</span><span class="n">petroleum_administration_for_defense_district</span> <span class="p">}</span> <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">last_year</span><span class="p">,</span> <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">].</span><span class="n">petroleum_administration_for_defense_district</span> <span class="p">}</span> <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="p">,</span>           <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="no">Country</span><span class="o">.</span><span class="n">united_states</span>   <span class="p">}</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">last_year</span><span class="p">,</span> <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="no">Country</span><span class="o">.</span><span class="n">united_states</span>   <span class="p">}</span>
+              <span class="k">if</span> <span class="n">price_per_unit</span> <span class="o">=</span> <span class="no">ResidenceFuelType</span><span class="o">[</span><span class="ss">:propane</span><span class="o">].</span><span class="n">price_per_unit</span><span class="p">(</span><span class="n">relaxations</span><span class="p">)</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:annual_propane_cost</span><span class="o">]</span> <span class="o">/</span> <span class="n">price_per_unit</span>
+              <span class="k">else</span>
+                <span class="kp">nil</span>
+              <span class="k">end</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:predicted_annual_propane_consumption</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from cohort&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:cohort</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:cohort</span><span class="o">].</span><span class="n">weighted_average</span><span class="p">(</span><span class="sx">%w(heating_space heating_water appliances)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">purpose</span><span class="o">|</span> <span class="s2">&quot;annual_energy_from_propane_for_</span><span class="si">#{</span><span class="n">purpose</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">to_sym</span> <span class="p">})</span><span class="o">.</span><span class="n">to_f</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:litres_of_propane</span><span class="p">)</span>
+            <span class="k">end</span>
+      
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">annual_propane_volume_estimate</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:reported_annual_kerosene_consumption</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from volume estimate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:annual_kerosene_volume_estimate</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:annual_kerosene_volume_estimate</span><span class="o">]</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:predicted_annual_kerosene_consumption</span> <span class="k">do</span> <span class="c1"># returns litres</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from cohort&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:cohort</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:cohort</span><span class="o">].</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_kerosene</span><span class="p">)</span><span class="o">.</span><span class="n">to_f</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:litres_of_kerosene</span><span class="p">)</span>
+            <span class="k">end</span>
+      
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">annual_kerosene_volume_estimate</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:reported_annual_biomass_consumption</span> <span class="k">do</span> <span class="c1"># returns joules</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from volume estimate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:annual_wood_volume_estimate</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:annual_wood_volume_estimate</span><span class="o">]</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:predicted_annual_biomass_consumption</span> <span class="k">do</span> <span class="c1"># returns joules</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from cohort&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:cohort</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:cohort</span><span class="o">].</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_wood</span><span class="p">)</span>
+            <span class="k">end</span>
+      
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">annual_wood_volume_estimate</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:reported_annual_coal_consumption</span> <span class="k">do</span> <span class="c1"># returns kg</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from volume estimate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:annual_coal_volume_estimate</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:annual_coal_volume_estimate</span><span class="o">]</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:predicted_annual_coal_consumption</span> <span class="k">do</span> <span class="c1"># returns kg</span>
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">annual_coal_volume_estimate</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:reported_annual_electricity_use</span> <span class="k">do</span> <span class="c1"># returns kWh</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from use estimate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:monthly_electricity_use_estimate</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:monthly_electricity_use_estimate</span><span class="o">]</span> <span class="o">*</span> <span class="mi">12</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;from cost&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:monthly_electricity_cost</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="ss">:state</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="n">relaxations</span> <span class="o">=</span> <span class="o">[]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="p">,</span>           <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span> <span class="p">}</span> <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">last_year</span><span class="p">,</span> <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span> <span class="p">}</span> <span class="k">if</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">]</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="p">,</span>           <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="no">Country</span><span class="o">.</span><span class="n">united_states</span>   <span class="p">}</span>
+              <span class="n">relaxations</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">:timeframe</span> <span class="o">=&gt;</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">last_year</span><span class="p">,</span> <span class="ss">:location</span> <span class="o">=&gt;</span> <span class="no">Country</span><span class="o">.</span><span class="n">united_states</span>   <span class="p">}</span>
+              <span class="k">if</span> <span class="n">price_per_unit</span> <span class="o">=</span> <span class="no">ResidenceFuelType</span><span class="o">[</span><span class="ss">:electricity</span><span class="o">].</span><span class="n">price_per_unit</span><span class="p">(</span><span class="n">relaxations</span><span class="p">)</span>
+                <span class="n">characteristics</span><span class="o">[</span><span class="ss">:monthly_electricity_cost</span><span class="o">]</span> <span class="o">*</span> <span class="mi">12</span> <span class="o">/</span> <span class="n">price_per_unit</span>
+              <span class="k">else</span>
+                <span class="kp">nil</span>
+              <span class="k">end</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:predicted_annual_electricity_use</span> <span class="k">do</span> <span class="c1"># returns kWh</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from cohort&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:cohort</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:clothes_machine_use</span><span class="p">,</span> <span class="ss">:refrigerator_count</span><span class="p">,</span> <span class="ss">:freezer_count</span><span class="p">,</span> <span class="ss">:dishwasher_use</span><span class="p">,</span> <span class="ss">:lighting_efficiency</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">cohort</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:cohort</span><span class="o">]</span>
+              <span class="n">energy</span> <span class="o">=</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="o">[</span><span class="ss">:annual_energy_from_electricity_for_clothes_driers</span><span class="p">,</span>
+                                                <span class="ss">:annual_energy_from_electricity_for_dishwashers</span><span class="p">,</span>
+                                                <span class="ss">:annual_energy_from_electricity_for_freezers</span><span class="p">,</span>
+                                                <span class="ss">:annual_energy_from_electricity_for_refrigerators</span><span class="p">,</span>
+                                                <span class="ss">:annual_energy_from_electricity_for_air_conditioners</span><span class="p">,</span>
+                                                <span class="ss">:annual_energy_from_electricity_for_heating_space</span><span class="p">,</span>
+                                                <span class="ss">:annual_energy_from_electricity_for_heating_water</span><span class="p">,</span>
+                                                <span class="ss">:annual_energy_from_electricity_for_other_appliances</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">to_f</span>
+              
+              <span class="k">if</span> <span class="n">clothes_machine_use</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:clothes_machine_use</span><span class="o">]</span>
+                <span class="n">energy</span> <span class="o">-=</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_electricity_for_clothes_driers</span><span class="p">)</span>
+                <span class="n">clothes_machine_use_cohort</span> <span class="o">=</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">.</span><span class="n">big_cohort</span><span class="p">(</span><span class="n">characteristics</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="o">[</span><span class="ss">:clothes_machine_use</span><span class="o">].</span><span class="n">push</span><span class="p">(</span><span class="o">*</span><span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">INPUT_CHARACTERISTICS</span><span class="p">))),</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">SUBCOHORT_THRESHOLD</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">clothes_machine_use_cohort</span><span class="o">.</span><span class="n">any?</span>
+                  <span class="n">energy</span> <span class="o">+=</span> <span class="n">clothes_machine_use_cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_electricity_for_clothes_driers</span><span class="p">)</span><span class="o">.</span><span class="n">to_f</span>
+                <span class="k">else</span>
+                  <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:clothes_machine_use</span><span class="o">].</span><span class="n">annual_energy_from_electricity_for_clothes_driers</span>
+                <span class="k">end</span>
+              <span class="k">end</span>
+              
+              <span class="k">if</span> <span class="n">refrigerator_count</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:refrigerator_count</span><span class="o">]</span>
+                <span class="n">energy</span> <span class="o">-=</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_electricity_for_refrigerators</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">refrigerator_count</span> <span class="o">==</span> <span class="mi">0</span>
+                  <span class="n">energy</span> <span class="o">+=</span> <span class="mi">0</span>
+                <span class="k">else</span>
+                  <span class="n">refrigerator_count_subcohort</span> <span class="o">=</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">.</span><span class="n">big_cohort</span><span class="p">(</span><span class="n">characteristics</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="o">[</span><span class="ss">:refrigerator_count</span><span class="o">].</span><span class="n">push</span><span class="p">(</span><span class="o">*</span><span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">INPUT_CHARACTERISTICS</span><span class="p">))),</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">SUBCOHORT_THRESHOLD</span><span class="p">)</span>
+                  <span class="k">if</span> <span class="n">refrigerator_count_subcohort</span><span class="o">.</span><span class="n">any?</span>
+                    <span class="n">energy</span> <span class="o">+=</span> <span class="n">refrigerator_count_subcohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_electricity_for_refrigerators</span><span class="p">)</span><span class="o">.</span><span class="n">to_f</span>
+                  <span class="k">else</span>
+                    <span class="n">energy</span> <span class="o">+=</span> <span class="n">refrigerator_count</span> <span class="o">*</span> <span class="no">ResidenceAppliance</span><span class="o">.</span><span class="n">annual_energy_from_electricity_for</span><span class="p">(</span><span class="ss">:refrigerators</span><span class="p">)</span>
+                  <span class="k">end</span>
+                <span class="k">end</span>
+              <span class="k">end</span>
+              
+              <span class="k">if</span> <span class="n">freezer_count</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:freezer_count</span><span class="o">]</span>
+                <span class="n">energy</span> <span class="o">-=</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_electricity_for_freezers</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">freezer_count</span> <span class="o">==</span> <span class="mi">0</span>
+                  <span class="n">energy</span> <span class="o">+=</span> <span class="mi">0</span>
+                <span class="k">else</span>
+                  <span class="n">freezer_count_subcohort</span> <span class="o">=</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">.</span><span class="n">big_cohort</span><span class="p">(</span><span class="n">characteristics</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="o">[</span><span class="ss">:freezer_count</span><span class="o">].</span><span class="n">push</span><span class="p">(</span><span class="o">*</span><span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">INPUT_CHARACTERISTICS</span><span class="p">))),</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">SUBCOHORT_THRESHOLD</span><span class="p">)</span>
+                  <span class="k">if</span> <span class="n">freezer_count_subcohort</span><span class="o">.</span><span class="n">any?</span>
+                    <span class="n">energy</span> <span class="o">+=</span> <span class="n">freezer_count_subcohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_electricity_for_freezers</span><span class="p">)</span><span class="o">.</span><span class="n">to_f</span>
+                  <span class="k">else</span>
+                    <span class="n">energy</span> <span class="o">+=</span> <span class="n">freezer_count</span> <span class="o">*</span> <span class="no">ResidenceAppliance</span><span class="o">.</span><span class="n">annual_energy_from_electricity_for</span><span class="p">(</span><span class="ss">:freezers</span><span class="p">)</span>
+                  <span class="k">end</span>
+                <span class="k">end</span>
+              <span class="k">end</span>
+              
+              <span class="k">if</span> <span class="n">dishwasher_use</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:dishwasher_use</span><span class="o">]</span>
+                <span class="n">energy</span> <span class="o">-=</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_electricity_for_dishwashers</span><span class="p">)</span>
+                <span class="n">dishwasher_use_cohort</span> <span class="o">=</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">.</span><span class="n">big_cohort</span><span class="p">(</span><span class="n">characteristics</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="o">[</span><span class="ss">:dishwasher_use</span><span class="o">].</span><span class="n">push</span><span class="p">(</span><span class="o">*</span><span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">INPUT_CHARACTERISTICS</span><span class="p">))),</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">SUBCOHORT_THRESHOLD</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">dishwasher_use_cohort</span><span class="o">.</span><span class="n">any?</span>
+                  <span class="n">energy</span> <span class="o">+=</span> <span class="n">dishwasher_use_cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:annual_energy_from_electricity_for_dishwashers</span><span class="p">)</span><span class="o">.</span><span class="n">to_f</span>
+                <span class="k">else</span>
+                  <span class="n">energy</span> <span class="o">+=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:dishwasher_use</span><span class="o">].</span><span class="n">annual_energy_from_electricity_for_dishwashers</span>
+                <span class="k">end</span>
+              <span class="k">end</span>
+              
+              <span class="k">if</span> <span class="n">lighting_efficiency</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:lighting_efficiency</span><span class="o">]</span>
+                <span class="n">lighting_electricity_use_in_cohort</span> <span class="o">=</span>
+                  <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:lighting_efficiency</span><span class="p">)</span> <span class="o">*</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:lighting_use</span><span class="p">)</span> <span class="o">*</span> <span class="n">research</span><span class="p">(</span><span class="ss">:efficient_lightbulb_power</span><span class="p">)</span> <span class="o">+</span>
+                  <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:lighting_efficiency</span><span class="p">))</span> <span class="o">*</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:lighting_use</span><span class="p">)</span> <span class="o">*</span> <span class="n">research</span><span class="p">(</span><span class="ss">:standard_lightbulb_power</span><span class="p">)</span>
+                <span class="n">energy</span> <span class="o">-=</span> <span class="n">lighting_electricity_use_in_cohort</span><span class="o">.</span><span class="n">watt_hours</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+                <span class="n">lighting_electricity_use_in_residence</span> <span class="o">=</span> 
+                  <span class="n">lighting_efficiency</span> <span class="o">*</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:lighting_use</span><span class="p">)</span> <span class="o">*</span> <span class="n">research</span><span class="p">(</span><span class="ss">:efficient_lightbulb_power</span><span class="p">)</span> <span class="o">+</span>
+                  <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lighting_efficiency</span><span class="p">)</span> <span class="o">*</span> <span class="n">cohort</span><span class="o">.</span><span class="n">weighted_average</span><span class="p">(</span><span class="ss">:lighting_use</span><span class="p">)</span> <span class="o">*</span> <span class="n">research</span><span class="p">(</span><span class="ss">:standard_lightbulb_power</span><span class="p">)</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">lighting_electricity_use_in_residence</span><span class="o">.</span><span class="n">watt_hours</span><span class="o">.</span><span class="n">to</span> <span class="ss">:joules</span>
+              <span class="k">end</span>
+              
+              <span class="n">energy</span><span class="o">.</span><span class="n">joules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="ss">:kilowatt_hours</span><span class="p">)</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">monthly_electricity_use_estimate</span> <span class="o">*</span> <span class="mi">12</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:active_subtimeframe</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from acquisition and retirement&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:acquisition</span><span class="p">,</span> <span class="ss">:retirement</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="no">Timeframe</span><span class="o">.</span><span class="n">constrained_new</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:acquisition</span><span class="o">].</span><span class="n">to_date</span><span class="p">,</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:retirement</span><span class="o">].</span><span class="n">to_date</span><span class="p">,</span> <span class="n">timeframe</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:acquisition</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from construction year&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:construction_year</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>FIXME this is an imperfect substitution for a line in https://app1.yerba.brighterplanet.com/changesets/9463</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:construction_year</span><span class="o">]</span> <span class="o">-</span> <span class="mi">1</span><span class="o">.</span><span class="n">year</span>
+            <span class="k">end</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from retirement&#39;</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="ss">:retirement</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="o">[</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">from</span><span class="p">,</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:retirement</span><span class="o">]</span> <span class="o">].</span><span class="n">compact</span><span class="o">.</span><span class="n">min</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:retirement</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from acquisition&#39;</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="ss">:acquisition</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">|</span>
+              <span class="o">[</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">to</span><span class="p">,</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:acquisition</span><span class="o">]</span> <span class="o">].</span><span class="n">compact</span><span class="o">.</span><span class="n">max</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          </pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>This is kindof &ldquo;hacky&rdquo;
+As implemented, this needs to be above floorspace committee or else cohort will always
+use the base.fallback</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>          <span class="n">committee</span> <span class="ss">:floorspace_estimate</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from cohort&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:cohort</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:cohort</span><span class="o">].</span><span class="n">weighted_average</span> <span class="ss">:floorspace</span>
+            <span class="k">end</span>
+            
+            <span class="n">quorum</span> <span class="s1">&#39;default&#39;</span> <span class="k">do</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">fallback</span><span class="o">.</span><span class="n">floorspace_estimate</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:cohort</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from residential energy consumption survey&#39;</span><span class="p">,</span> <span class="ss">:appreciates</span> <span class="o">=&gt;</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">::</span><span class="no">INPUT_CHARACTERISTICS</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">cohort</span> <span class="o">=</span> <span class="no">ResidentialEnergyConsumptionSurveyResponse</span><span class="o">.</span><span class="n">big_cohort</span> <span class="n">characteristics</span>
+              <span class="k">if</span> <span class="n">cohort</span><span class="o">.</span><span class="n">any?</span>
+                <span class="n">cohort</span>
+              <span class="k">else</span>
+                <span class="kp">nil</span>
+              <span class="k">end</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:bathrooms</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from fractional bathroom counts&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:full_bathrooms</span><span class="p">,</span> <span class="ss">:half_bathrooms</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:full_bathrooms</span><span class="o">]</span> <span class="o">+</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:half_bathrooms</span><span class="o">]</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:census_region</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from census division&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:census_division</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:census_division</span><span class="o">].</span><span class="n">census_region</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:census_division</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from state&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:state</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:state</span><span class="o">].</span><span class="n">census_division</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:state</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from climate division&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:climate_division</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:climate_division</span><span class="o">].</span><span class="n">state</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+      
+          <span class="n">committee</span> <span class="ss">:floorspace</span> <span class="k">do</span> <span class="c1"># returns a Range of floorspaces</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from floorspace estimate&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:floorspace_estimate</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">floorspace_estimate</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:floorspace_estimate</span><span class="o">]</span>
+              <span class="p">(</span><span class="n">floorspace_estimate</span> <span class="o">-</span> <span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">.</span><span class="p">(</span><span class="n">floorspace_estimate</span> <span class="o">+</span> <span class="mi">50</span><span class="p">)</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+      
+          <span class="n">committee</span> <span class="ss">:heating_degree_days</span> <span class="k">do</span> <span class="c1"># returns a Range of degree-days</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from climate division&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:climate_division</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">days</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:climate_division</span><span class="o">].</span><span class="n">heating_degree_days</span>
+              <span class="p">(</span><span class="n">days</span> <span class="o">-</span> <span class="no">ClimateDivision</span><span class="o">::</span><span class="no">RADIUS</span><span class="p">)</span><span class="o">.</span><span class="n">.</span><span class="p">(</span><span class="n">days</span> <span class="o">+</span> <span class="no">ClimateDivision</span><span class="o">::</span><span class="no">RADIUS</span><span class="p">)</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:cooling_degree_days</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from climate division&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:climate_division</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">days</span> <span class="o">=</span> <span class="n">characteristics</span><span class="o">[</span><span class="ss">:climate_division</span><span class="o">].</span><span class="n">cooling_degree_days</span>
+              <span class="p">(</span><span class="n">days</span> <span class="o">-</span> <span class="no">ClimateDivision</span><span class="o">::</span><span class="no">RADIUS</span><span class="p">)</span><span class="o">.</span><span class="n">.</span><span class="p">(</span><span class="n">days</span> <span class="o">+</span> <span class="no">ClimateDivision</span><span class="o">::</span><span class="no">RADIUS</span><span class="p">)</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+          
+          <span class="n">committee</span> <span class="ss">:climate_division</span> <span class="k">do</span>
+            <span class="n">quorum</span> <span class="s1">&#39;from zip code&#39;</span><span class="p">,</span> <span class="ss">:needs</span> <span class="o">=&gt;</span> <span class="ss">:zip_code</span> <span class="k">do</span> <span class="o">|</span><span class="n">characteristics</span><span class="o">|</span>
+              <span class="n">characteristics</span><span class="o">[</span><span class="ss">:zip_code</span><span class="o">].</span><span class="n">climate_division</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">research</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">key</span>
+        <span class="k">when</span> <span class="ss">:efficient_lightbulb_power</span>
+          <span class="mi">17</span><span class="o">.</span><span class="mi">5</span> <span class="c1"># watts https://brighterplanet.sifterapp.com/projects/30/issues/433</span>
+        <span class="k">when</span> <span class="ss">:standard_lightbulb_power</span>
+          <span class="mi">67</span><span class="o">.</span><span class="mi">5</span> <span class="c1"># watts https://brighterplanet.sifterapp.com/projects/30/issues/433</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
