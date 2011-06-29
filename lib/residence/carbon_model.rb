@@ -383,7 +383,7 @@ module BrighterPlanet
               
               if clothes_machine_use = characteristics[:clothes_machine_use]
                 energy -= cohort.weighted_average(:annual_energy_from_electricity_for_clothes_driers)
-                clothes_machine_use_cohort = ResidentialEnergyConsumptionSurveyResponse.big_cohort(characteristics.slice(*([:clothes_machine_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
+                clothes_machine_use_cohort = recs_cohort(characteristics.slice(*([:clothes_machine_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
                 if clothes_machine_use_cohort.any?
                   energy += clothes_machine_use_cohort.weighted_average(:annual_energy_from_electricity_for_clothes_driers).to_f
                 else
@@ -396,7 +396,7 @@ module BrighterPlanet
                 if refrigerator_count == 0
                   energy += 0
                 else
-                  refrigerator_count_subcohort = ResidentialEnergyConsumptionSurveyResponse.big_cohort(characteristics.slice(*([:refrigerator_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
+                  refrigerator_count_subcohort = recs_cohort(characteristics.slice(*([:refrigerator_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
                   if refrigerator_count_subcohort.any?
                     energy += refrigerator_count_subcohort.weighted_average(:annual_energy_from_electricity_for_refrigerators).to_f
                   else
@@ -410,7 +410,7 @@ module BrighterPlanet
                 if freezer_count == 0
                   energy += 0
                 else
-                  freezer_count_subcohort = ResidentialEnergyConsumptionSurveyResponse.big_cohort(characteristics.slice(*([:freezer_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
+                  freezer_count_subcohort = recs_cohort(characteristics.slice(*([:freezer_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
                   if freezer_count_subcohort.any?
                     energy += freezer_count_subcohort.weighted_average(:annual_energy_from_electricity_for_freezers).to_f
                   else
@@ -421,7 +421,7 @@ module BrighterPlanet
               
               if dishwasher_use = characteristics[:dishwasher_use]
                 energy -= cohort.weighted_average(:annual_energy_from_electricity_for_dishwashers)
-                dishwasher_use_cohort = ResidentialEnergyConsumptionSurveyResponse.big_cohort(characteristics.slice(*([:dishwasher_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
+                dishwasher_use_cohort = recs_cohort(characteristics.slice(*([:dishwasher_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
                 if dishwasher_use_cohort.any?
                   energy += dishwasher_use_cohort.weighted_average(:annual_energy_from_electricity_for_dishwashers).to_f
                 else
@@ -485,7 +485,7 @@ module BrighterPlanet
           
           committee :cohort do
             quorum 'from residential energy consumption survey', :appreciates => ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS do |characteristics|
-              cohort = ResidentialEnergyConsumptionSurveyResponse.big_cohort characteristics
+              cohort = recs_cohort characteristics
               if cohort.any?
                 cohort
               else
@@ -554,6 +554,20 @@ module BrighterPlanet
         when :standard_lightbulb_power
           67.5 # watts https://brighterplanet.sifterapp.com/projects/30/issues/433
         end
+      end
+      
+      def self.recs_cohort(characteristics)
+        conditions = characteristics.keys.inject({}) do |memo, k|
+          case v = characteristics[k].value
+          when ActiveRecord::Base
+            assoc = ResidentialEnergyConsumptionSurveyResponse.reflect_on_association(k)
+            memo[assoc.primary_key_name.to_sym] = v.send(v.class.primary_key)
+          else
+            memo[k] = v
+          end
+          memo
+        end
+        ResidentialEnergyConsumptionSurveyResponse.big_cohort conditions
       end
     end
   end
