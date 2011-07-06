@@ -556,7 +556,7 @@ module BrighterPlanet
         end
       end
       
-      def self.recs_cohort(characteristics)
+      def self.recs_cohort(characteristics, threshold = ResidentialEnergyConsumptionSurveyResponse.minimum_cohort_size)
         conditions = characteristics.keys.inject({}) do |memo, k|
           case v = characteristics[k].value
           when ActiveRecord::Base
@@ -567,7 +567,7 @@ module BrighterPlanet
           end
           memo
         end
-        ResidentialEnergyConsumptionSurveyResponse.big_cohort conditions
+        ResidentialEnergyConsumptionSurveyResponse.big_cohort conditions, threshold
       end
     end
   end
