@@ -567,7 +567,7 @@ module BrighterPlanet
           end
           memo
         end
-        ResidentialEnergyConsumptionSurveyResponse.big_cohort conditions, threshold
+        ResidentialEnergyConsumptionSurveyResponse.big_cohort conditions, :minimum_cohort_size => threshold
       end
     end
   end
