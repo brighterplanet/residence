@@ -4,7 +4,7 @@ module BrighterPlanet
   module Residence
     module Data
       def self.included(base)
-        base.create_table do
+        base.force_schema do
           string   'residence_class_id'
           string   'urbanity_id'
           string   'zip_code_id'
