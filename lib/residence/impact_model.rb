@@ -1,9 +1,6 @@
 # Copyright © 2010 Brighter Planet.
 # See LICENSE for details.
 # Contact Brighter Planet for dual-license arrangements.
-
-# sabshere 8/15/10 should these just be required in the emitter gem's lib/emitter.rb?
-
 module BrighterPlanet
   module Residence
     module ImpactModel
