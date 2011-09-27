@@ -6,10 +6,10 @@
 
 module BrighterPlanet
   module Residence
-    module CarbonModel
+    module ImpactModel
       def self.included(base)
-        base.decide :emission, :with => :characteristics do
-          committee :emission do
+        base.decide :impact, :with => :characteristics do
+          committee :carbon do
             quorum 'from fuel and electricity use and occupation and residents', :needs => [:fuel_oil_consumed, :natural_gas_consumed, :dirty_electricity_generated, :propane_consumed, :biomass_consumed, :kerosene_consumed, :coal_consumed, :residents, :electricity_emission_factor, :floorspace_estimate, :air_conditioner_use, :active_subtimeframe, :occupation] do |characteristics, timeframe|
               ( characteristics[:fuel_oil_consumed]           * ResidenceFuelType.find_by_name('fuel oil').emission_factor    +
                 characteristics[:natural_gas_consumed]        * ResidenceFuelType.find_by_name('natural gas').emission_factor +

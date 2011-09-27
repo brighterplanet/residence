@@ -4,47 +4,45 @@ module BrighterPlanet
   module Residence
     module Data
       def self.included(base)
-        base.force_schema do
-          string   'residence_class_id'
-          string   'urbanity_id'
-          string   'zip_code_id'
-          date     'construction_year'
-          boolean  'ownership'
-          float    'occupation'
-          integer  'residents'
-          integer  'floors'
-          float    'floorspace_estimate'
-          string   'air_conditioner_use_id'
-          string   'dishwasher_use_id'
-          string   'clothes_machine_use_id'
-          integer  'refrigerator_count'
-          integer  'freezer_count'
-          float    'lighting_efficiency'
-          integer  'bedrooms'
-          integer  'dining_rooms'
-          integer  'living_rooms'
-          integer  'kitchens'
-          integer  'full_bathrooms'
-          integer  'half_bathrooms'
-          float    'bathrooms'
-          integer  'other_rooms'
-          integer  'heated_garage_berths'
-          float    'annual_fuel_oil_volume_estimate'
-          float    'annual_fuel_oil_cost'
-          float    'monthly_natural_gas_volume_estimate'
-          float    'monthly_natural_gas_cost'
-          float    'monthly_electricity_use_estimate'
-          float    'monthly_electricity_cost'
-          float    'green_electricity'
-          float    'annual_propane_volume_estimate'
-          float    'annual_propane_cost'
-          float    'annual_wood_volume_estimate'
-          float    'annual_kerosene_volume_estimate'
-          float    'annual_coal_volume_estimate'
-          float    'annual_coal_cost'
-          date     'acquisition'
-          date     'retirement'
-        end
+        base.col :residence_class_id
+        base.col :urbanity_id
+        base.col :zip_code_id
+        base.col :construction_year, :type => :date
+        base.col :ownership, :type => :boolean
+        base.col :occupation, :type => :float
+        base.col :residents, :type => :integer
+        base.col :floors, :type => :integer
+        base.col :floorspace_estimate, :type => :float
+        base.col :air_conditioner_use_id
+        base.col :dishwasher_use_id
+        base.col :clothes_machine_use_id
+        base.col :refrigerator_count, :type => :integer
+        base.col :freezer_count, :type => :integer
+        base.col :lighting_efficiency, :type => :float
+        base.col :bedrooms, :type => :integer
+        base.col :dining_rooms, :type => :integer
+        base.col :living_rooms, :type => :integer
+        base.col :kitchens, :type => :integer
+        base.col :full_bathrooms, :type => :integer
+        base.col :half_bathrooms, :type => :integer
+        base.col :bathrooms, :type => :float
+        base.col :other_rooms, :type => :integer
+        base.col :heated_garage_berths, :type => :integer
+        base.col :annual_fuel_oil_volume_estimate, :type => :float
+        base.col :annual_fuel_oil_cost, :type => :float
+        base.col :monthly_natural_gas_volume_estimate, :type => :float
+        base.col :monthly_natural_gas_cost, :type => :float
+        base.col :monthly_electricity_use_estimate, :type => :float
+        base.col :monthly_electricity_cost, :type => :float
+        base.col :green_electricity, :type => :float
+        base.col :annual_propane_volume_estimate, :type => :float
+        base.col :annual_propane_cost, :type => :float
+        base.col :annual_wood_volume_estimate, :type => :float
+        base.col :annual_kerosene_volume_estimate, :type => :float
+        base.col :annual_coal_volume_estimate, :type => :float
+        base.col :annual_coal_cost, :type => :float
+        base.col :acquisition, :type => :date
+        base.col :retirement, :type => :date
 
         base.data_miner do
           process "pull orphans" do
