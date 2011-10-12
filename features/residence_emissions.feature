@@ -1,6 +1,9 @@
 Feature: Residence Emissions Calculations
   The residence model should generate correct emission calculations
 
+  Background:
+    Given a residence
+
   Scenario Outline: Standard Calculations for residence
     Given it has "zip_code.name" of "<zip_code>"
     And it has "floorspace_estimate" of "<floorspace>"

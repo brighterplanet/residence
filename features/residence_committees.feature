@@ -1,6 +1,9 @@
 Feature: Residence Committee Calculations
   The residence model should generate correct committee calculations
 
+  Background:
+    Given a residence
+
   Scenario Outline: Bathrooms committee
     Given a characteristic "full_bathrooms" of integer value "<full_baths>"
     And a characteristic "half_bathrooms" of integer value "<half_baths>"
@@ -21,9 +24,6 @@ Feature: Residence Committee Calculations
     Examples:
       | bedrooms | lighting_efficiency | prediction  |
       | 3        | 0.5                 | 12393.36822 |
-
-  Background:
-    Given a Residence
 
   Scenario: Predicted annual electricity use committee from default
     Given a characteristic "lighting_efficiency" of "0.5"
