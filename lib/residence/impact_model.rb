@@ -1,6 +1,9 @@
 # Copyright © 2010 Brighter Planet.
 # See LICENSE for details.
 # Contact Brighter Planet for dual-license arrangements.
+
+require 'cohort_analysis'
+
 module BrighterPlanet
   module Residence
     module ImpactModel
@@ -380,7 +383,7 @@ module BrighterPlanet
               
               if clothes_machine_use = characteristics[:clothes_machine_use]
                 energy -= cohort.weighted_average(:annual_energy_from_electricity_for_clothes_driers)
-                clothes_machine_use_cohort = recs_cohort(characteristics.slice(*([:clothes_machine_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
+                clothes_machine_use_cohort = recs_cohort(characteristics.slice(*([:clothes_machine_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))))
                 if clothes_machine_use_cohort.any?
                   energy += clothes_machine_use_cohort.weighted_average(:annual_energy_from_electricity_for_clothes_driers).to_f
                 else
@@ -393,7 +396,7 @@ module BrighterPlanet
                 if refrigerator_count == 0
                   energy += 0
                 else
-                  refrigerator_count_subcohort = recs_cohort(characteristics.slice(*([:refrigerator_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
+                  refrigerator_count_subcohort = recs_cohort(characteristics.slice(*([:refrigerator_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))))
                   if refrigerator_count_subcohort.any?
                     energy += refrigerator_count_subcohort.weighted_average(:annual_energy_from_electricity_for_refrigerators).to_f
                   else
@@ -407,7 +410,7 @@ module BrighterPlanet
                 if freezer_count == 0
                   energy += 0
                 else
-                  freezer_count_subcohort = recs_cohort(characteristics.slice(*([:freezer_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
+                  freezer_count_subcohort = recs_cohort(characteristics.slice(*([:freezer_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))))
                   if freezer_count_subcohort.any?
                     energy += freezer_count_subcohort.weighted_average(:annual_energy_from_electricity_for_freezers).to_f
                   else
@@ -418,7 +421,7 @@ module BrighterPlanet
               
               if dishwasher_use = characteristics[:dishwasher_use]
                 energy -= cohort.weighted_average(:annual_energy_from_electricity_for_dishwashers)
-                dishwasher_use_cohort = recs_cohort(characteristics.slice(*([:dishwasher_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))), ResidentialEnergyConsumptionSurveyResponse::SUBCOHORT_THRESHOLD)
+                dishwasher_use_cohort = recs_cohort(characteristics.slice(*([:dishwasher_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))))
                 if dishwasher_use_cohort.any?
                   energy += dishwasher_use_cohort.weighted_average(:annual_energy_from_electricity_for_dishwashers).to_f
                 else
@@ -553,7 +556,7 @@ module BrighterPlanet
         end
       end
       
-      def self.recs_cohort(characteristics, threshold = ResidentialEnergyConsumptionSurveyResponse.minimum_cohort_size)
+      def self.recs_cohort(characteristics)
         conditions = characteristics.keys.inject({}) do |memo, k|
           case v = characteristics[k].value
           when ActiveRecord::Base
@@ -564,7 +567,7 @@ module BrighterPlanet
           end
           memo
         end
-        ResidentialEnergyConsumptionSurveyResponse.big_cohort conditions, :minimum_cohort_size => threshold
+        ResidentialEnergyConsumptionSurveyResponse.cohort conditions, :minimum_size => 5 # from earth gem, per Matt
       end
     end
   end
