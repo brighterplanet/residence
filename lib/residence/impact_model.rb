@@ -561,7 +561,11 @@ module BrighterPlanet
           case v = characteristics[k].value
           when ActiveRecord::Base
             assoc = ResidentialEnergyConsumptionSurveyResponse.reflect_on_association(k)
-            memo[assoc.association_foreign_key.to_sym] = v.send(v.class.primary_key)
+            if ActiveRecord::VERSION::STRING > '3.1'
+              memo[assoc.foreign_key.to_sym] = v.send(v.class.primary_key)
+            else
+              memo[assoc.primary_key_name.to_sym] = v.send(v.class.primary_key)
+            end
           else
             memo[k] = v
           end
