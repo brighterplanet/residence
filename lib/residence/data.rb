@@ -20,14 +20,9 @@ module BrighterPlanet
         base.col :freezer_count, :type => :integer
         base.col :lighting_efficiency, :type => :float
         base.col :bedrooms, :type => :integer
-        base.col :dining_rooms, :type => :integer
-        base.col :living_rooms, :type => :integer
-        base.col :kitchens, :type => :integer
         base.col :full_bathrooms, :type => :integer
         base.col :half_bathrooms, :type => :integer
         base.col :bathrooms, :type => :float
-        base.col :other_rooms, :type => :integer
-        base.col :heated_garage_berths, :type => :integer
         base.col :annual_fuel_oil_volume_estimate, :type => :float
         base.col :annual_fuel_oil_cost, :type => :float
         base.col :monthly_natural_gas_volume_estimate, :type => :float
@@ -40,7 +35,6 @@ module BrighterPlanet
         base.col :annual_wood_volume_estimate, :type => :float
         base.col :annual_kerosene_volume_estimate, :type => :float
         base.col :annual_coal_volume_estimate, :type => :float
-        base.col :annual_coal_cost, :type => :float
         base.col :acquisition, :type => :date
         base.col :retirement, :type => :date
 
