@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "residence/version"
+require File.expand_path("../lib/residence/version", __FILE__)
 
 Gem::Specification.new do |s|
   s.name = %q{residence}
@@ -23,6 +22,10 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.add_runtime_dependency 'emitter',   '~>0.11.0'
-  s.add_runtime_dependency 'cohort_analysis'
+  s.add_runtime_dependency 'cohort_analysis', '>=1.0.3'
+  s.add_runtime_dependency 'weighted_average', '>=2.0.1'
+  s.add_development_dependency 'conversions'
   s.add_development_dependency 'sniff', '~>0.11.3'
+  s.add_development_dependency 'sqlite3-ruby'
+  s.add_development_dependency 'mysql2'
 end

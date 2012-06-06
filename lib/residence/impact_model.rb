@@ -240,7 +240,10 @@ module BrighterPlanet
           
           committee :predicted_annual_fuel_oil_consumption do # returns litres
             quorum 'from cohort', :needs => :cohort do |characteristics|
-              characteristics[:cohort].weighted_average(%w(heating_space heating_water appliances).map { |purpose| "annual_energy_from_fuel_oil_for_#{purpose}".to_sym }).to_f.joules.to(:litres_of_fuel_oil)
+              columns = %w{heating_space heating_water appliances}.map { |purpose| "annual_energy_from_fuel_oil_for_#{purpose}" }
+              if weighted_average = characteristics[:cohort].weighted_average(columns)
+                weighted_average.joules.to(:litres_of_fuel_oil)
+              end
             end
       
             quorum 'default' do
@@ -269,7 +272,8 @@ module BrighterPlanet
           
           committee :predicted_annual_natural_gas_consumption do # returns joules
             quorum 'from cohort', :needs => :cohort do |characteristics|
-              characteristics[:cohort].weighted_average(%w(heating_space heating_water appliances).map { |purpose| "annual_energy_from_natural_gas_for_#{purpose}".to_sym }).to_f
+              columns = %w{heating_space heating_water appliances}.map { |purpose| "annual_energy_from_natural_gas_for_#{purpose}" }
+              characteristics[:cohort].weighted_average columns
             end
       
             quorum 'default' do
@@ -298,7 +302,10 @@ module BrighterPlanet
           
           committee :predicted_annual_propane_consumption do # returns litres
             quorum 'from cohort', :needs => :cohort do |characteristics|
-              characteristics[:cohort].weighted_average(%w(heating_space heating_water appliances).map { |purpose| "annual_energy_from_propane_for_#{purpose}".to_sym }).to_f.joules.to(:litres_of_propane)
+              columns = %w{heating_space heating_water appliances}.map { |purpose| "annual_energy_from_propane_for_#{purpose}" }
+              if weighted_average = characteristics[:cohort].weighted_average(columns)
+                weighted_average.joules.to(:litres_of_propane)
+              end
             end
       
             quorum 'default' do
@@ -314,7 +321,9 @@ module BrighterPlanet
           
           committee :predicted_annual_kerosene_consumption do # returns litres
             quorum 'from cohort', :needs => :cohort do |characteristics|
-              characteristics[:cohort].weighted_average(:annual_energy_from_kerosene).to_f.joules.to(:litres_of_kerosene)
+              if weighted_average = characteristics[:cohort].weighted_average(:annual_energy_from_kerosene)
+                weighted_average.joules.to(:litres_of_kerosene)
+              end
             end
       
             quorum 'default' do
@@ -379,13 +388,12 @@ module BrighterPlanet
                                                 :annual_energy_from_electricity_for_air_conditioners,
                                                 :annual_energy_from_electricity_for_heating_space,
                                                 :annual_energy_from_electricity_for_heating_water,
-                                                :annual_energy_from_electricity_for_other_appliances]).to_f
-              
+                                                :annual_energy_from_electricity_for_other_appliances])
+
               if clothes_machine_use = characteristics[:clothes_machine_use]
                 energy -= cohort.weighted_average(:annual_energy_from_electricity_for_clothes_driers)
-                clothes_machine_use_cohort = ImpactModel.recs_cohort(characteristics.slice(*([:clothes_machine_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))))
-                if clothes_machine_use_cohort.any?
-                  energy += clothes_machine_use_cohort.weighted_average(:annual_energy_from_electricity_for_clothes_driers).to_f
+                if clothes_machine_use_cohort = ImpactModel.recs_cohort(characteristics.slice(*([:clothes_machine_use] + ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS)))
+                  energy += clothes_machine_use_cohort.weighted_average(:annual_energy_from_electricity_for_clothes_driers)
                 else
                   energy += characteristics[:clothes_machine_use].annual_energy_from_electricity_for_clothes_driers
                 end
@@ -396,9 +404,8 @@ module BrighterPlanet
                 if refrigerator_count == 0
                   energy += 0
                 else
-                  refrigerator_count_subcohort = ImpactModel.recs_cohort(characteristics.slice(*([:refrigerator_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))))
-                  if refrigerator_count_subcohort.any?
-                    energy += refrigerator_count_subcohort.weighted_average(:annual_energy_from_electricity_for_refrigerators).to_f
+                  if refrigerator_count_subcohort = ImpactModel.recs_cohort(characteristics.slice(*([:refrigerator_count] + ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS)))
+                    energy += refrigerator_count_subcohort.weighted_average(:annual_energy_from_electricity_for_refrigerators)
                   else
                     energy += refrigerator_count * ResidenceAppliance.annual_energy_from_electricity_for(:refrigerators)
                   end
@@ -410,34 +417,30 @@ module BrighterPlanet
                 if freezer_count == 0
                   energy += 0
                 else
-                  freezer_count_subcohort = ImpactModel.recs_cohort(characteristics.slice(*([:freezer_count].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))))
-                  if freezer_count_subcohort.any?
-                    energy += freezer_count_subcohort.weighted_average(:annual_energy_from_electricity_for_freezers).to_f
+                  if freezer_count_subcohort = ImpactModel.recs_cohort(characteristics.slice(*([:freezer_count] + ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS)))
+                    energy += freezer_count_subcohort.weighted_average(:annual_energy_from_electricity_for_freezers)
                   else
                     energy += freezer_count * ResidenceAppliance.annual_energy_from_electricity_for(:freezers)
                   end
                 end
               end
               
-              if dishwasher_use = characteristics[:dishwasher_use]
+              if du = characteristics[:dishwasher_use]
                 energy -= cohort.weighted_average(:annual_energy_from_electricity_for_dishwashers)
-                dishwasher_use_cohort = ImpactModel.recs_cohort(characteristics.slice(*([:dishwasher_use].push(*ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS))))
-                if dishwasher_use_cohort.any?
-                  energy += dishwasher_use_cohort.weighted_average(:annual_energy_from_electricity_for_dishwashers).to_f
+                if dishwasher_use_cohort = ImpactModel.recs_cohort(characteristics.slice(*([:dishwasher_use] + ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS)))
+                  energy += dishwasher_use_cohort.weighted_average(:annual_energy_from_electricity_for_dishwashers)
                 else
-                  energy += characteristics[:dishwasher_use].annual_energy_from_electricity_for_dishwashers
+                  energy += du.annual_energy_from_electricity_for_dishwashers
                 end
               end
               
-              if lighting_efficiency = characteristics[:lighting_efficiency]
-                lighting_electricity_use_in_cohort =
-                  cohort.weighted_average(:lighting_efficiency) * cohort.weighted_average(:lighting_use) * ImpactModel.research(:efficient_lightbulb_power) +
-                  (1 - cohort.weighted_average(:lighting_efficiency)) * cohort.weighted_average(:lighting_use) * ImpactModel.research(:standard_lightbulb_power)
-                energy -= lighting_electricity_use_in_cohort.watt_hours.to :joules
-                lighting_electricity_use_in_residence = 
-                  lighting_efficiency * cohort.weighted_average(:lighting_use) * ImpactModel.research(:efficient_lightbulb_power) +
-                  (1 - lighting_efficiency) * cohort.weighted_average(:lighting_use) * ImpactModel.research(:standard_lightbulb_power)
-                energy += lighting_electricity_use_in_residence.watt_hours.to :joules
+              if le = characteristics[:lighting_efficiency]
+                le_w = cohort.weighted_average(:lighting_efficiency)
+                lu_w = cohort.weighted_average(:lighting_use)
+                from_cohort = le_w * lu_w * ImpactModel.research(:efficient_lightbulb_power) + (1 - le_w) * lu_w * ImpactModel.research(:standard_lightbulb_power)
+                energy -= from_cohort.watt_hours.to :joules
+                from_residence = le * lu_w * ImpactModel.research(:efficient_lightbulb_power) + (1 - le) * lu_w * ImpactModel.research(:standard_lightbulb_power)
+                energy += from_residence.watt_hours.to :joules
               end
               
               energy.joules.to(:kilowatt_hours)
@@ -485,12 +488,7 @@ module BrighterPlanet
           
           committee :cohort do
             quorum 'from residential energy consumption survey', :appreciates => ResidentialEnergyConsumptionSurveyResponse::INPUT_CHARACTERISTICS do |characteristics|
-              cohort = ImpactModel.recs_cohort characteristics
-              if cohort.any?
-                cohort
-              else
-                nil
-              end
+              ImpactModel.recs_cohort characteristics
             end
           end
           
@@ -562,16 +560,20 @@ module BrighterPlanet
           when ActiveRecord::Base
             assoc = ResidentialEnergyConsumptionSurveyResponse.reflect_on_association(k)
             if ActiveRecord::VERSION::STRING > '3.1'
-              memo[assoc.foreign_key.to_sym] = v.send(v.class.primary_key)
+              memo[assoc.foreign_key.to_sym] = v.id
             else
-              memo[assoc.primary_key_name.to_sym] = v.send(v.class.primary_key)
+              memo[assoc.primary_key_name.to_sym] = v.id
             end
           else
             memo[k] = v
           end
           memo
         end
-        ResidentialEnergyConsumptionSurveyResponse.cohort conditions, :minimum_size => 5 # from earth gem, per Matt
+        cohort = ResidentialEnergyConsumptionSurveyResponse.cohort conditions, :minimum_size => 5 # from earth gem, per Matt
+        cohort.to_sql # force resolution of the cohort
+        if cohort.cohort_possible?
+          cohort
+        end
       end
     end
   end
