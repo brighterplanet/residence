@@ -2,9 +2,13 @@ require 'bundler'
 Bundler.setup
 
 require 'cucumber'
-require 'cucumber/formatter/unicode'
 
 require 'sniff'
-Sniff.init File.expand_path('../..', File.dirname(__FILE__)), :earth => [:residence, :locality], :cucumber => true, :logger => $stderr
-
-ActiveRecord::Base.logger.level = Logger::DEBUG
+Sniff.init File.join(File.dirname(__FILE__), '..', '..'),
+  # :adapter => 'mysql2',
+  # :database => 'test_flight',
+  # :username => 'root',
+  # :password => 'password',
+  :earth => [:residence, :locality],
+  :cucumber => true,
+  :logger => 'log/test_log.txt'
