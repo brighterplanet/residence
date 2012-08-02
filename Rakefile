@@ -1,8 +1,3 @@
-require 'bundler'
-Bundler.setup
-
-require 'sniff'
+require 'bundler/setup'
 require 'sniff/rake_tasks'
-Sniff::RakeTasks.define_tasks do |t|
-  t.earth_domains = :residence
-end
+Sniff::RakeTasks.define_tasks
