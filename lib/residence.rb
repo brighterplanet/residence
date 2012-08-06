@@ -1,5 +1,11 @@
 require 'emitter'
 
+require 'residence/impact_model'
+require 'residence/characterization'
+require 'residence/data'
+require 'residence/relationships'
+require 'residence/summarization'
+
 module BrighterPlanet
   module Residence
     extend BrighterPlanet::Emitter
