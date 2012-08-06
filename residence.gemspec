@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'cohort_analysis', '>=1.0.3'
   s.add_runtime_dependency 'weighted_average', '>=2.0.1'
   s.add_development_dependency 'conversions'
-  s.add_development_dependency 'sniff', '~>0.11.3'
+  s.add_development_dependency 'sniff', '~> 1.0.0'
   s.add_development_dependency 'sqlite3-ruby'
   s.add_development_dependency 'mysql2'
 end
