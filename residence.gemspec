@@ -21,12 +21,10 @@ Gem::Specification.new do |s|
   s.executables = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
   
-  s.add_runtime_dependency 'earth'
+  s.add_runtime_dependency 'earth', '~> 1.0.0'
   s.add_dependency 'emitter', '~> 1.0.0'
   s.add_runtime_dependency 'cohort_analysis', '>=1.0.3'
   s.add_runtime_dependency 'weighted_average', '>=2.0.1'
   s.add_development_dependency 'conversions'
   s.add_development_dependency 'sniff', '~> 1.0.0'
-  s.add_development_dependency 'sqlite3-ruby'
-  s.add_development_dependency 'mysql2'
 end

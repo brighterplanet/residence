@@ -1,3 +1,10 @@
+require 'earth/residence/air_conditioner_use'
+require 'earth/residence/clothes_machine_use'
+require 'earth/residence/dishwasher_use'
+require 'earth/residence/residence_class'
+require 'earth/residence/urbanity'
+require 'earth/locality/zip_code'
+
 module BrighterPlanet
   module Residence
     module Relationships

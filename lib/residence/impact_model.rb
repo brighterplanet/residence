@@ -4,6 +4,15 @@
 
 require 'cohort_analysis'
 
+require 'earth/locality/climate_division'
+require 'earth/locality/country'
+require 'earth/locality/egrid_region'
+require 'earth/locality/egrid_subregion'
+require 'earth/residence/air_conditioner_use'
+require 'earth/residence/residence_fuel_type'
+require 'earth/residence/residential_energy_consumption_survey_response'
+require 'earth/residence/residence_appliance'
+
 module BrighterPlanet
   module Residence
     module ImpactModel
