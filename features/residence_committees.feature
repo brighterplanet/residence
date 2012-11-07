@@ -23,7 +23,7 @@ Feature: Residence Committee Calculations
     Then the conclusion of the committee should be "<prediction>"
     Examples:
       | bedrooms | lighting_efficiency | prediction  |
-      | 3        | 0.5                 | 12393.36822 |
+      | 3        | 0.5                 | 12393.36823 |
 
   Scenario: Predicted annual electricity use committee from default
     Given a characteristic "lighting_efficiency" of "0.5"
